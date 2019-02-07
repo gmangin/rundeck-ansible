@@ -5,7 +5,7 @@
     headers:
       content-type: application/x-rundeck-data-password
     method: GET
-    body: "{{ item.content}}"
+    body: "{{ item.content }}"
     status_code: 404, 200
   register: get_key
   when: item is defined and item
@@ -19,6 +19,6 @@
     headers:
       content-type: application/x-rundeck-data-password
     method: POST
-    body: "{{ item.content}}"
+    body: "{{ item.content }}"
     status_code: 201
   when: item is defined and item and get_key.status == 404

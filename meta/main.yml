@@ -1,5 +1,19 @@
 ---
-dependencies:
-- { role: jdk }
+galaxy_info:
+  role_name: rundeck
+  author: Gaelle MANGIN
+  description: install rundeck with ssl and encryption storage
+  company: scaleway
+  min_ansible_version: 2.0
+  license: "license (BSD, MIT)"
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+  galaxy_tags: [rundeck]
 
-# TODO add syslog
+dependencies:
+- { role: gmangin.jdk }

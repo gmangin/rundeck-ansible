@@ -48,7 +48,6 @@ rundeck_jobs:
 	* 2. you have to add your jobs on `rundeck_jobs_path` (you can find this variable on `defaults/main.yml`)
 	  * you can create your job from rundeck web and click `Download Job definition in YAML`, then move it to `rundeck_jobs_path`
 	  * or you can cp an existing job and update the part you need to update.
-	  * /!\ if you export the job from rundeck wed, do no forget to update `id: {{ item_jobs }}`, `uuid: {{ item_jobs }}` and `name: {{ item.key }}_{{ item_jobs }}` (and maybe other variable) This avoid to have random names and dupplicat.
   * Example1: You want to add tata on project TOTO
 
 ``` yaml
