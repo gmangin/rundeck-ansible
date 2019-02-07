@@ -1,0 +1,40 @@
+# {{ ansible_managed }}
+# framework.properties -
+#
+
+# ----------------------------------------------------------------
+# Rundeck server connection information
+# ----------------------------------------------------------------
+
+framework.server.name = {{ inventory_hostname }}
+framework.server.hostname = {{ inventory_hostname }}
+framework.server.port = {{ rundeck_port }}
+framework.server.url = {{ rundeck_url }}
+# Username/password used by CLI tools.
+framework.server.username = admin
+framework.server.password = admin
+
+# ----------------------------------------------------------------
+# Installation locations
+# ----------------------------------------------------------------
+
+rdeck.base={{ rundeck_dir }}
+
+framework.projects.dir={{ rundeck_dir }}/projects
+framework.etc.dir=/etc/rundeck
+framework.var.dir={{ rundeck_dir }}/var
+framework.tmp.dir={{ rundeck_dir }}/var/tmp
+framework.logs.dir={{ rundeck_dir }}/logs
+framework.libext.dir={{ rundeck_dir }}/libext
+
+# ----------------------------------------------------------------
+# SSH defaults for node executor and file copier
+# ----------------------------------------------------------------
+
+framework.ssh.keypath = {{ rundeck_dir }}/.ssh/id_rsa
+framework.ssh.user = rundeck
+
+# ssh connection timeout after a specified number of milliseconds.
+# "0" value means wait forever.
+framework.ssh.timeout = 0
+rundeck.tokens.file=/etc/rundeck/tokens.properties

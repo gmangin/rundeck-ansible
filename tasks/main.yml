@@ -1,0 +1,111 @@
+---
+- name: Add the user rundeck
+  become: True
+  become_method: sudo
+  user:
+    name: rundeck
+
+- name: Install the rundeck packages
+  become: True
+  become_method: sudo
+  get_url:
+    url: "{{ rundeck_package_url }}"
+    dest: /tmp
+
+- name: Install rundeck
+  become: True
+  become_method: sudo
+  apt:
+    deb: "/tmp/{{ rundeck_package }}"
+
+- name: Ensures rundeck directories exist
+  become: True
+  become_method: sudo
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    owner: rundeck
+    group: rundeck
+  with_items:
+    - "{{ rundeck_dir }}"
+    - /var/log/rundeck
+
+- name: add ssh key and known hosts
+  become: True
+  become_method: sudo
+  file:
+    path: "{{ rundeck_dir }}/.ssh"
+    state: directory
+    owner: rundeck
+    mode: 0700
+
+- name: add ssh key
+  become: True
+  become_method: sudo
+  copy:
+    content: "{{ rundeck_ldap_ssh_key_file }}"
+    dest: "{{ rundeck_dir }}/.ssh/id_rsa"
+    owner: rundeck
+    group: rundeck
+    mode: 0600
+
+- name: If needed include ansible.yml
+  include: ansible.yml
+  when: rundeck_ansible_repo is defined and rundeck_ansible_repo | length > 0
+
+- name: include set project and paths
+  include: set_project.yml
+  with_items: "{{ rundeck_jobs }}"
+
+- name: Upload rundeck conf and static tokens
+  become: True
+  become_method: sudo
+  template:
+    src: "conf_{{ item.src }}"
+    dest: "/etc/rundeck/{{ item.dest }}"
+    owner: rundeck
+    group: rundeck
+    mode: '0640'
+  with_items:
+    - { src: admin.aclpolicy.j2, dest: admin.aclpolicy }
+    - { src: rundeck-config.properties.j2, dest: rundeck-config.properties }
+    - { src: jaas-activedirectory.conf.j2, dest: jaas-activedirectory.conf }
+    - { src: framework.properties.j2, dest: framework.properties }
+    - { src: profile.j2, dest: profile }
+    - { src: tokens.properties, dest: tokens.properties }
+  notify:
+    - Stop rundeck
+    - Start rundeck
+
+- name: meta flush_handlers
+  meta: flush_handlers
+
+- name: Start rundeck
+  become: True
+  become_method: sudo
+  service:
+    name: rundeckd
+    state: started
+
+- name: Check Rundeck is up
+  become: True
+  become_method: sudo
+  wait_for:
+    port: 4440
+    delay: 10
+    timeout: 200
+
+- name: include nginx reverse proxy
+  include: nginx.yml
+  when: rundeck_ssl
+
+- name: meta flush_handlers
+  meta: flush_handlers
+
+- name: Add all key storage via rundeck API
+  include: set_storage.yml
+  with_items: "{{ rundeck_storage }}"
+
+- name: Add all jobs via rundeck API for all project
+  include: set_jobs.yml
+  with_dict: "{{ rundeck_jobs }}"

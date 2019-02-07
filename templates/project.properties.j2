@@ -1,0 +1,17 @@
+# {{ ansible_managed }}
+
+project.name={{ item }}
+resources.source.1.config.requireFileExists=false
+project.ssh-authentication=privateKey
+service.NodeExecutor.default.provider=jsch-ssh
+resources.source.1.config.includeServerNode=true
+resources.source.1.config.generateFileAutomatically=true
+resources.source.1.config.format=resourcexml
+resources.source.1.config.file={{ rundeck_dir }}/projects/{{ item }}/etc/resources.xml
+project.nodeCache.enabled=true
+project.ssh-keypath={{ rundeck_dir }}/.ssh/id_rsa
+project.script-exec-shell="/bin/bash -c"
+project.nodeCache.delay=30
+service.FileCopier.default.provider=jsch-scp
+project.description={{ item }} project by Online - {{ ansible_managed }}
+resources.source.1.type=file

@@ -1,0 +1,22 @@
+activedirectory {
+com.dtolabs.rundeck.jetty.jaas.JettyCachingLdapLoginModule required
+debug="true"
+contextFactory="com.sun.jndi.ldap.LdapCtxFactory"
+providerUrl="{{ ldap_server }}"
+bindDn="{{ rundeck_ldap_bind_dn }}"
+bindPassword="{{ rundeck_ldap_bind_password }}"
+authenticationMethod="simple"
+forceBindingLogin="true"
+userBaseDn="{{ ldap_binddn }}"
+userRdnAttribute="uid"
+userIdAttribute="uid"
+userPasswordAttribute="userPassword"
+userObjectClass="onlineNetPerson"
+roleBaseDn="ou=accesses,{{ ldap_basedn }}"
+roleNameAttribute="cn"
+roleMemberAttribute="member"
+roleObjectClass="groupOfNames"
+cacheDurationMillis="0"
+reportStatistics="true"
+nestedGroups="false";
+};

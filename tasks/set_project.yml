@@ -1,0 +1,43 @@
+---
+- name: "Ensures {{ rundeck_dir }}/projects/{{ item }} path exists for all project"
+  become: True
+  become_method: sudo
+  file:
+    path: "{{ rundeck_dir }}/projects/{{ item }}"
+    recurse: yes
+    state: directory
+    owner: rundeck
+    group: rundeck
+    mode: 0740
+
+- name: "Ensures {{ rundeck_dir }}/projects/{{ item }}/etc path exists for all project"
+  become: True
+  become_method: sudo
+  file:
+    path: "{{ rundeck_dir }}/projects/{{ item }}/etc"
+    recurse: yes
+    state: directory
+    owner: rundeck
+    group: rundeck
+    mode: 0740
+
+- name: "Set up {{ item }} projects resources if {{ item }}_resources.xml is present in ansible"
+  become: True
+  become_method: sudo
+  template:
+    src: "{{ rundeck_templates_path }}/projects/{{ item }}_resources.xml"
+    dest: "{{ rundeck_dir }}/projects/{{ item }}/etc/resources.xml"
+    owner: rundeck
+    group: rundeck
+    mode: '0740'
+  when: (rundeck_templates_path + "/projects/" + item + "_resources.xml") is is_file
+
+- name: "set up {{ item }} projects project.properties"
+  become: True
+  become_method: sudo
+  template:
+    src: project.properties.j2
+    dest: "{{ rundeck_dir }}/projects/{{ item }}/etc/project.properties"
+    owner: rundeck
+    group: rundeck
+    mode: '0740'

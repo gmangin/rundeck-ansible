@@ -1,0 +1,38 @@
+---
+- name: Install nginx
+  become: True
+  become_method: sudo
+  apt:
+    name: nginx
+    state: latest
+
+- name: Add cert
+  become: True
+  become_method: sudo
+  copy:
+    content: "{{ rundeck_crt }}"
+    dest: /etc/nginx/rundeck.crt
+
+- name: Add key
+  become: True
+  become_method: sudo
+  copy:
+    content: "{{ rundeck_crt_key }}"
+    dest: /etc/nginx/rundeck.key
+
+- name: Add conf ssl nginx
+  become: True
+  become_method: sudo
+  template:
+    src: nginx.conf
+    dest: /etc/nginx/conf.d/rundeck.conf
+  notify:
+    - Restart nginx
+
+- name: Check reverse proxy up
+  become: True
+  become_method: sudo
+  wait_for:
+    port: 443
+    delay: 10
+    timeout: 200

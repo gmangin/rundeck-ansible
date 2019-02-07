@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+#loglevel.default is the default log level for jobs: ERROR,WARN,INFO,VERBOSE,DEBUG
+loglevel.default=INFO
+rdeck.base={{ rundeck_dir }}
+
+#rss.enabled if set to true enables RSS feeds that are public (non-authenticated)
+rss.enabled=false
+# change hostname here
+grails.serverURL={{ rundeck_url }}
+dataSource.dbCreate=update
+dataSource.url=jdbc:h2:file:/var/lib/rundeck/data/rundeckdb;MVCC=true
+rundeck.log4j.config.file=/etc/rundeck/log4j.properties
+rundeck.storage.converter.1.type=jasypt-encryption
+rundeck.storage.converter.1.path=keys
+rundeck.storage.converter.1.encryptorType=strong
+rundeck.storage.converter.1.config.password={{ rundeck_storage_jasypt_encryption }}
+rundeck.storage.converter.1.config.algorithm=PBEWITHSHA256AND128BITAES-CBC-BC
+rundeck.storage.converter.1.config.provider=BC

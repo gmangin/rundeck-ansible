@@ -1,0 +1,30 @@
+---
+- name: Stop rundeck
+  become: True
+  become_method: sudo
+  service:
+    name: rundeckd
+    state: stopped
+
+- name: Start rundeck
+  become: True
+  become_method: sudo
+  service:
+    name: rundeckd
+    state: started
+
+- name: Restart rundeck
+  become: True
+  become_method: sudo
+  service:
+    name: rundeckd
+    state: restarted
+    enabled: yes
+
+- name: Restart nginx
+  become: True
+  become_method: sudo
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes

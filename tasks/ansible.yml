@@ -1,0 +1,16 @@
+---
+- name: Install ansible if rundeck_ansible_repo
+  become: True
+  become_method: sudo
+  apt:
+    name: ansible
+    state: latest
+
+- name: If needed clone ansible repo
+  become: True
+  become_user: rundeck
+  git:
+    repo: "{{ gitlab_url }}:{{ item }}.git"
+    dest: "{{ rundeck_dir }}/{{ item }}"
+    accept_hostkey: yes
+  with_items: "{{ rundeck_ansible_repo }}"

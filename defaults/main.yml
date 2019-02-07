@@ -1,0 +1,40 @@
+---
+rundeck_version: 3.0.12.20190114-1.201901142226
+rundeck_package: "rundeck_{{ rundeck_version }}_all.deb"
+rundeck_package_url: "https://mirror.pv.ocshq.com/jenkins-builds/artifacts/rundeck/{{ rundeck_package }}"
+rundeck_dir: /var/lib/rundeck
+
+# rundeck key storage
+rundeck_storage_jasypt_encryption: mysecret
+rundeck_storage: {} # List the key storage that you want
+# rundeck_storage:
+#  - name: myname
+#  - content: mycontent
+#  - path: mypath/
+
+# rundeck ldap
+rundeck_ldap_bind_password: ""
+rundeck_ldap_bind_dn: ""
+rundeck_ldap_ssh_key_file: ""
+rundeck_ldap_ssh_key_pub: ""
+#rundeck_cert: ""
+#rundeck_crt_key: ""
+
+# rundeck conf
+rundeck_token: ""
+rundeck_ssl: false
+rundeck_dns: "{{ inventory_hostname }}"
+rundeck_port: 4440
+rundeck_url: "http://{{ rundeck_dns }}:{{ rundeck_port }}"
+
+# rundeck acl
+rundeck_group_admin: admin
+#rundeck_acl_projects: # List the projects with specific acl
+#  name_group: [project1, project2]
+
+# rundeck project
+rundeck_template_path: ../templates/ # Set rundeck path to jobs directories
+rundeck_jobs: {} # List the jobs that shoud execute on projects
+
+# rundeck ansible
+rundeck_ansible_repo: [] # List repo that you need to clone for rundeck ansible jobs

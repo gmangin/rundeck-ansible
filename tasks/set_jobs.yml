@@ -1,0 +1,12 @@
+---
+- name: "Add all {{ item.key }} jobs for clusters"
+  uri:
+    url: "{{ rundeck_url }}/api/28/project/{{ item.key }}/jobs/import?authtoken={{ rundeck_token }}"
+    headers:
+      content-type: text/yaml
+    method: POST
+    body: "{{ lookup('template','{{ rundeck_templates_path }}/jobs/{{ item.key | lower }}_{{ item_jobs }}.yaml') }}"
+  when: item is defined and item
+  with_items: "{{ item.value }}"
+  loop_control:
+    loop_var: item_jobs

@@ -1,0 +1,24 @@
+---
+- name: Check if {{ item.name }} is already store
+  uri:
+    url: "{{ rundeck_url }}/api/28/storage/keys/{{ item.path }}{{ item.name }}?authtoken={{ rundeck_token }}"
+    headers:
+      content-type: application/x-rundeck-data-password
+    method: GET
+    body: "{{ item.content}}"
+    status_code: 404, 200
+  register: get_key
+  when: item is defined and item
+
+- debug:
+    var: get_key
+
+- name: "Add {{ item.name }} key storage for clusters"
+  uri:
+    url: "{{ rundeck_url }}/api/28/storage/keys/{{ item.path }}{{ item.name }}?authtoken={{ rundeck_token }}"
+    headers:
+      content-type: application/x-rundeck-data-password
+    method: POST
+    body: "{{ item.content}}"
+    status_code: 201
+  when: item is defined and item and get_key.status == 404
